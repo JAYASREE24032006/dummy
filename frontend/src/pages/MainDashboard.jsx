@@ -15,16 +15,16 @@ const MainDashboard = ({ status, handleLogout, handleGlobalLogout }) => {
             <h1>{currentApp}</h1>
             <p className="welcome-text">Connected to Enterprise SSO Hub</p>
 
-            <div className="simulation-controls" style={{ margin: '20px 0', padding: '15px', border: '1px dashed #666', borderRadius: '8px' }}>
-                <label style={{ marginRight: '10px' }}> Simulation Mode - Identity:</label>
-                <select value={currentApp} onChange={handleAppSwitch} style={{ padding: '5px' }}>
+            <div className="simulation-controls">
+                <label>Simulation Mode - Identity:</label>
+                <select value={currentApp} onChange={handleAppSwitch}>
                     <option value="Portal Dashboard">Portal Dashboard</option>
                     <option value="HR Portal">HR Portal</option>
                     <option value="CRM System">CRM System</option>
                     <option value="ERP Suite">ERP Suite</option>
                     <option value="DevOps Console">DevOps Console</option>
                 </select>
-                <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '5px' }}>
+                <p>
                     (Select functionality to simulate this tab acting as a different application)
                 </p>
             </div>

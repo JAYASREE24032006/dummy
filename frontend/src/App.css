@@ -43,9 +43,24 @@
   font-size: 2.5rem;
   margin: 0;
   letter-spacing: -0.05em;
-  color: #ffffff;
+  color: #eab308;
+  /* Dark Yellow */
   background: none;
   -webkit-text-fill-color: initial;
+  text-shadow: 0 0 10px rgba(234, 180, 8, 0.2);
+}
+
+/* Card Headers - General (Apps) */
+.card h1 {
+  color: #eab308;
+  /* Dark Yellow */
+  text-shadow: 0 0 10px rgba(234, 180, 8, 0.2);
+}
+
+/* Main Dashboard Specific Override */
+.dashboard-card h1 {
+  color: #ffffff;
+  /* White */
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
@@ -102,7 +117,8 @@
 .menu-item h3 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: var(--primary);
+  color: #eab308;
+  /* Dark Yellow */
   font-family: var(--font-heading);
 }
 
@@ -117,37 +133,37 @@
 }
 
 .hr-theme h3 {
-  color: #d946ef;
+  color: #eab308;
 }
 
 .crm-theme {
-  border-top: 4px solid var(--primary);
+  border-top: 4px solid #eab308;
 }
 
 .erp-theme {
-  border-top: 4px solid #f97316;
+  border-top: 4px solid #eab308;
 }
 
 .erp-theme:hover {
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
-  border-color: #f97316;
+  box-shadow: 0 0 20px rgba(234, 180, 8, 0.2);
+  border-color: #eab308;
 }
 
 .erp-theme h3 {
-  color: #f97316;
+  color: #eab308;
 }
 
 .admin-theme {
-  border-top: 4px solid var(--error);
+  border-top: 4px solid #eab308;
 }
 
 .admin-theme:hover {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
-  border-color: var(--error);
+  box-shadow: 0 0 20px rgba(234, 180, 8, 0.2);
+  border-color: #eab308;
 }
 
 .admin-theme h3 {
-  color: var(--error);
+  color: #eab308;
 }
 
 /* Buttons & Actions */
@@ -297,6 +313,54 @@ button:hover {
   padding: 4px;
 }
 
+/* Simulation Mode Controls */
+.simulation-controls {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* White Border */
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  /* Subtle filler */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.simulation-controls label {
+  color: #eab308;
+  /* Dark Yellow */
+  font-weight: 500;
+  width: 100%;
+  /* Force new line */
+  margin-bottom: 0.5rem;
+  /* Add specific spacing */
+}
+
+.simulation-controls select {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+}
+
+.simulation-controls select:focus {
+  border-color: #ffffff;
+}
+
+.simulation-controls p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
 /* Login Specific Layout - Fixed */
 .login-theme {
   display: flex;
@@ -307,6 +371,20 @@ button:hover {
   padding: 1rem;
   background: transparent;
   /* Changed from var(--bg-deep) to transparent */
+}
+
+/* Global Footer */
+.app-footer-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 2rem;
+  opacity: 0.6;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  width: 100%;
+  padding-bottom: 3rem;
+  /* Ensure scrolling space */
 }
 
 .login-theme .card {
@@ -329,7 +407,8 @@ button:hover {
   font-size: 1.75rem;
   text-align: center;
   margin-bottom: 0.5rem;
-  color: white;
+  color: #ffffff;
+  /* White */
   background: none;
   /* Remove gradient text for cleaner look */
   -webkit-text-fill-color: initial;

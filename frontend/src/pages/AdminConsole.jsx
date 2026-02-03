@@ -44,7 +44,7 @@ const AdminConsole = ({ status, handleLogout, handleGlobalLogout }) => {
         <div className="card dashboard-card admin-theme" style={{ maxWidth: '1200px' }}>
             <div className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h1>🛡️ Security Command Center</h1>
+                    <h1> Security Command Center</h1>
                     <p style={{ color: 'var(--accent)' }}>Agentic AI Overwatch: Active</p>
                 </div>
                 <Link to="/dashboard" className="back-link" style={{ color: 'var(--text-muted)' }}>← Hub</Link>

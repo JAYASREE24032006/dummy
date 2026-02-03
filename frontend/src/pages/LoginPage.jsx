@@ -8,8 +8,8 @@ const LoginPage = ({ onLogin, status }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    // Prioritize message passed via redirect, else default status
-    const [localStatus, setLocalStatus] = useState(location.state?.globalLogoutMessage || status || '');
+    // Prioritize message passed via redirect, else default status (Removing global logout message as requested)
+    const [localStatus, setLocalStatus] = useState(status || '');
 
     // Reset status on new login attempt
     const handleSubmit = (e) => {
@@ -155,7 +155,7 @@ const LoginPage = ({ onLogin, status }) => {
                         variants={itemVariants}
                         transition={{ delay: 0.7 }}
                     >
-                        System v2.4.0 • Secured by SHIELD AI
+                        Product from Clowns in Clouds
                     </motion.div>
                 </form>
 

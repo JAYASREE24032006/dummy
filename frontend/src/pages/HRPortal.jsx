@@ -5,7 +5,7 @@ const HRPortal = ({ status, handleLogout, handleGlobalLogout }) => {
     return (
         <div className="card app-card hr-theme">
             <div className="app-header">
-                <h1>👥 HR Portal</h1>
+                <h1> HR Portal</h1>
                 <Link to="/dashboard" className="back-link">← Back to Hub</Link>
             </div>
             <p>SSO Verify: <strong>Authenticated </strong></p>
