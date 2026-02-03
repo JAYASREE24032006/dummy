@@ -29,8 +29,8 @@ const ShieldLogo = () => {
                 {/* Defs for gradients and filters */}
                 <defs>
                     <linearGradient id="shieldGradient" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#3b82f6" />
-                        <stop offset="100%" stopColor="#1e40af" />
+                        <stop offset="0%" stopColor="#ffffff" />
+                        <stop offset="100%" stopColor="#a3a3a3" />
                     </linearGradient>
                     <filter id="glow">
                         <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
@@ -44,7 +44,7 @@ const ShieldLogo = () => {
                 {/* Outer Shield Outline - Pulsing */}
                 <motion.path
                     d="M50 5 L90 20 V50 C90 75 50 95 50 95 C50 95 10 75 10 50 V20 L50 5 Z"
-                    stroke="#60a5fa"
+                    stroke="#ffffff"
                     strokeWidth="2"
                     fill="none"
                     initial={{ pathLength: 0, opacity: 0 }}
@@ -64,8 +64,8 @@ const ShieldLogo = () => {
                 <motion.path
                     d="M50 12 L82 24 V50 C82 70 50 88 50 88 C50 88 18 70 18 50 V24 L50 12 Z"
                     fill="url(#shieldGradient)"
-                    fillOpacity="0.2"
-                    stroke="#3b82f6"
+                    fillOpacity="0.1"
+                    stroke="#a3a3a3"
                     strokeWidth="1"
                     style={{ filter: 'url(#glow)' }}
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -78,7 +78,7 @@ const ShieldLogo = () => {
                     cx="50"
                     cy="45"
                     r="8"
-                    fill="#eff6ff"
+                    fill="#ffffff"
                     initial={{ scale: 0 }}
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{
@@ -95,7 +95,7 @@ const ShieldLogo = () => {
                     y1="25"
                     x2="85"
                     y2="25"
-                    stroke="#93c5fd"
+                    stroke="#ffffff"
                     strokeWidth="2"
                     strokeOpacity="0.8"
                     animate={{
@@ -115,7 +115,7 @@ const ShieldLogo = () => {
                     <motion.circle
                         key={i}
                         r="1.5"
-                        fill="#60a5fa"
+                        fill="#ffffff"
                         initial={{ x: 50, y: 45, opacity: 0 }}
                         animate={{
                             x: 50 + (Math.random() * 40 - 20),

@@ -110,7 +110,7 @@ function AppContent() {
     return (
         <div className="App">
             <div className="socket-status">
-                🟢 Agentic OS | Socket: {socketId || 'Connecting...'}
+                <span className="status-dot"></span> Agentic OS | Socket: {socketId || 'Connecting...'}
             </div>
 
             <Routes>

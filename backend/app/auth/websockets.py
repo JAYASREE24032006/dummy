@@ -7,7 +7,7 @@ from app.agents.executioner import executioner
 # Using In-Memory Manager for Local Prototype Reliability
 sio_server = socketio.AsyncServer(
     async_mode='asgi',
-    cors_allowed_origins="*"
+    cors_allowed_origins=["http://localhost:5173", "http://localhost:5174"]
 )
 
 sio_app = socketio.ASGIApp(
