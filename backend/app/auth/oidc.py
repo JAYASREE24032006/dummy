@@ -80,12 +80,12 @@ async def login(
     
     # 1. Calculate Risk
     # This uses the Sync Redis Client internally, which is fine for prototype limits
-    current_score, reasons = risk_detector.calculate_risk(user_id, jti, meta)
+    current_score, reasons = await risk_detector.calculate_risk(user_id, jti, meta)
     
     print(f"🤖 Agentic Analysis: Login Attempt from {client_ip} | Risk: {current_score}")
 
     # 2. Make Decision
-    action = decision_agent.evaluate_risk(user_id, jti, current_score)
+    action = await decision_agent.evaluate_risk(user_id, jti, current_score)
     
     if action == "FORCE_LOGOUT" or action == "LOCK_ACCOUNT":
         print(f"❌ RISK DETECTED ({current_score}). TRIGGERING GLOBAL LOCKDOWN.")

@@ -5,14 +5,14 @@ class AutoDecisionAgent:
     def __init__(self):
         self.redis = redis_client
 
-    def evaluate_risk(self, user_id, session_id, current_score):
+    async def evaluate_risk(self, user_id, session_id, current_score):
         """
         Evaluates risk score and determines action.
         Returns: Action String (SAFE, WARNING, REQUIRE_REAUTH, FORCE_LOGOUT, LOCK_ACCOUNT)
         """
         # Get Last Reauth Timestamp
         last_reauth_key = f"user:{user_id}:last_reauth"
-        last_reauth_ts = self.redis.get_client().get(last_reauth_key)
+        last_reauth_ts = await self.redis.get_client().get(last_reauth_key)
         
         is_in_grace_period = False
         if last_reauth_ts:

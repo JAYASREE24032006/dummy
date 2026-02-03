@@ -41,13 +41,13 @@ async def join(sid, data):
         # Risk Analysis
         # Mocking Location: In real app, derived from IP via GeoIP DB
         meta = {"ip": "127.0.0.1", "app_name": app_name, "country": "India"}
-        session_monitor.register_session(user_id, sid, meta)
+        await session_monitor.register_session(user_id, sid, meta)
         
         # Trigger Risk Check
-        score, reasons = risk_detector.calculate_risk(user_id, sid, meta)
+        score, reasons = await risk_detector.calculate_risk(user_id, sid, meta)
         
         # Auto-Execution Logic
-        action = decision_agent.evaluate_risk(user_id, sid, score)
+        action = await decision_agent.evaluate_risk(user_id, sid, score)
         if action == "FORCE_LOGOUT":
              await executioner.execute_global_logout(sio_server, user_id, f"High Risk: {reasons}")
 
