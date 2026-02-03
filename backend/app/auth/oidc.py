@@ -65,10 +65,16 @@ async def login(
     from app.agents.decision import decision_agent
     
     # Create Meta for Risk Agent
+    
+    # 🕵️‍♂️ MOCK GEO-LOCATION
+    detected_country = "India"
+    if form_data.username == "attacker":
+        detected_country = "Russia" # Simulate Foreign Attack
+        
     meta = {
         "ip": client_ip,
         "device": "Browser (Login)", 
-        "country": "US", # Default for prototype
+        "country": detected_country, 
         "app_name": "Login Portal" 
     }
     

@@ -9,7 +9,8 @@ app = FastAPI(title="Agentic SSO")
 # Relaxing CORS to allow all local development origins via Regex
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex="http://(localhost|127\.0\.0\.1)(:\d+)?",
+    allow_origin_regex="http://(localhost|127\.0\.0\.1)(:\d+)?", # Covers :5173, :5174, :8000
+    allow_origins=["http://localhost:5174", "http://localhost:5173"], # Explicit whitelist
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

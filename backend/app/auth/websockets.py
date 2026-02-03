@@ -4,6 +4,7 @@ from app.agents.risk import risk_detector
 from app.agents.decision import decision_agent
 from app.agents.executioner import executioner
 
+# Using In-Memory Manager for Local Prototype Reliability
 sio_server = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins="*"
@@ -14,9 +15,9 @@ sio_app = socketio.ASGIApp(
     socketio_path='socket.io'
 )
 
-# In-memory store for active connections (User -> SIDs)
-# Still useful for fast lookups even with Redis
-active_connections = {}
+# Explicit In-Memory Session Store
+# Maps user_id -> set({sid1, sid2, ...})
+active_user_sessions = {}
 
 @sio_server.event
 async def connect(sid, environ):
@@ -28,93 +29,77 @@ async def join(sid, data):
     user_id = data.get('user_id')
     app_name = data.get('app_name', 'Unknown App')
     
-    # Mock Metadata
-    meta = {
-        "ip": "127.0.0.1", # Mock
-        "device": "Browser",
-        "country": "US", # Default benign
-        "app_name": app_name
-    }
-    
     if user_id:
-        print(f"Client {sid} ({app_name}) joining room user_{user_id}")
+        print(f"✅ [Socket] Client {sid} ({app_name}) joined user_{user_id}")
         await sio_server.enter_room(sid, f"user_{user_id}")
         
-        # Admin Room Join
-        if "Admin" in app_name:
-            print(f"🛡️ Client {sid} joined ADMIN ROOM")
-            await sio_server.enter_room(sid, "admin_room")
+        # Manual Tracking
+        if user_id not in active_user_sessions:
+            active_user_sessions[user_id] = set()
+        active_user_sessions[user_id].add(sid)
         
-        # 1. Register Session (Agent 1)
+        # Risk Analysis
+        # Mocking Location: In real app, derived from IP via GeoIP DB
+        meta = {"ip": "127.0.0.1", "app_name": app_name, "country": "India"}
         session_monitor.register_session(user_id, sid, meta)
         
-        # 2. Calculate Risk (Agent 2)
+        # Trigger Risk Check
         score, reasons = risk_detector.calculate_risk(user_id, sid, meta)
         
-        # NOTE: Real-time broadcast to Admin Dashboard
-        await sio_server.emit('RISK_UPDATE', {
-            'user_id': user_id,
-            'app_name': app_name,
-            'score': score,
-            'reasons': reasons,
-            'status': 'ACTIVE'
-        }, room='admin_room')
-        
-        # 3. Auto-Decision (Agent 3)
+        # Auto-Execution Logic
         action = decision_agent.evaluate_risk(user_id, sid, score)
-        
-        print(f"🧠 [Brain] Risk: {score} | Action: {action} | Reasons: {reasons}")
-        
-        # 4. Execution (Agent 4)
-        if action == "FORCE_LOGOUT" or action == "LOCK_ACCOUNT":
-            await executioner.execute_global_logout(sio_server, user_id, f"High Risk ({score}): {', '.join(reasons)}")
-            # Notify Admin of Action
-            await sio_server.emit('RISK_UPDATE', {
-                'user_id': user_id, 'app_name': app_name, 'score': score, 'status': 'KILLED'
-            }, room='admin_room')
-            
-        elif action == "REQUIRE_REAUTH":
-            await executioner.trigger_reauth(sio_server, user_id, sid)
-            await sio_server.emit('RISK_UPDATE', {
-                'user_id': user_id, 'app_name': app_name, 'score': score, 'status': 'CHALLENGED'
-            }, room='admin_room')
+        if action == "FORCE_LOGOUT":
+             await executioner.execute_global_logout(sio_server, user_id, f"High Risk: {reasons}")
 
 @sio_server.event
-async def heartbeat(sid, data):
-    user_id = data.get('user_id')
-    if user_id:
-        session_monitor.heartbeat(user_id, sid)
-
-@sio_server.event
-async def verify_password(sid, data):
-    """
-    Called when user submits password in Re-Auth modal.
-    """
-    user_id = data.get('user_id')
-    password = data.get('password')
-    
-    # Mock Verification (In real app, verify hash)
-    if password == "password":
-        executioner.log_success_reauth(user_id)
-        # Notify client to close modal
-        await sio_server.emit('REAUTH_SUCCESS', {'message': 'Verified'}, room=sid)
-    else:
-        await sio_server.emit('REAUTH_FAILED', {'message': 'Invalid Password'}, room=sid)
+async def disconnect(sid):
+    # Remove SID from all trackers
+    for uid in list(active_user_sessions.keys()):
+        if sid in active_user_sessions[uid]:
+            active_user_sessions[uid].remove(sid)
+            if not active_user_sessions[uid]:
+                del active_user_sessions[uid]
+            break
 
 @sio_server.event
 async def force_global_logout(sid, data):
-    """
-    Triggered by a client to force logout on all apps.
-    """
     user_id = data.get('user_id')
     reason = data.get('reason', 'Manual Global Logout')
     initiator = data.get('initiator', 'Unknown')
     
-    # Delegate to Executioner but we need to pass initiator info if we want to log it
-    # For now, simplistic reuse
-    await executioner.execute_global_logout(sio_server, user_id, f"{reason} (via {initiator})")
+    print(f"🌍 [Socket] Global Logout Initiated for {user_id} by {initiator}")
+    
+    # robust broadcast
+    if user_id in active_user_sessions:
+        target_sids = list(active_user_sessions[user_id])
+        print(f"Messaging {len(target_sids)} active sessions...")
+        for target_sid in target_sids:
+            try:
+                await sio_server.emit('LOGOUT_ALL', {
+                    'user_id': str(user_id), # Ensure string for comparison
+                    'reason': reason,
+                    'initiator': initiator
+                }, room=target_sid) # Direct messaging
+            except Exception as e:
+                print(f"Error sending to {target_sid}: {e}")
+                
+    # Also emit to room as backup
+    await sio_server.emit('LOGOUT_ALL', {
+        'user_id': str(user_id),
+        'reason': reason,
+        'initiator': initiator
+    }, room=f"user_{user_id}")
 
 @sio_server.event
-async def disconnect(sid):
-    # print(f"Client disconnected: {sid}")
+async def heartbeat(sid, data):
     pass
+
+@sio_server.event
+async def verify_password(sid, data):
+    user_id = data.get('user_id')
+    password = data.get('password')
+    if password == "password":
+        await sio_server.emit('REAUTH_SUCCESS', {'message': 'Verified'}, room=sid)
+    else:
+        await sio_server.emit('REAUTH_FAILED', {'message': 'Invalid Password'}, room=sid)
+

@@ -3,20 +3,21 @@ import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:8000', {
     autoConnect: false,
-    transports: ['websocket', 'polling'],
+    transports: ['websocket'], // Force WebSocket only to avoid polling 400s
     reconnection: true,
-    reconnectionAttempts: 5,
+    reconnectionAttempts: 10,
+    withCredentials: true,
 });
 
-const useSocketListener = (navigate, token) => {
+const useSocketListener = (navigate, token, onLogout) => {
     useEffect(() => {
         const userId = sessionStorage.getItem('user_id');
         const appName = sessionStorage.getItem('current_app_name') || 'Portal Dashboard';
 
         if (userId && token) {
             if (!socket.connected) {
+                console.log("Initialize Socket Connection...");
                 socket.connect();
-                console.log("Socket connecting...");
             }
 
             const joinRoom = () => {
@@ -34,31 +35,31 @@ const useSocketListener = (navigate, token) => {
             };
 
             socket.on('connect', onConnect);
+            socket.on('connect_error', (err) => {
+                console.error("Socket Connection Error:", err.message);
+            });
 
             // Heartbeat Loop (Every 2 minutes)
             const heartbeatInterval = setInterval(() => {
                 if (socket.connected) {
                     socket.emit('heartbeat', { user_id: userId });
-                    // console.log("💓 Sent Heartbeat");
                 }
             }, 120000);
 
             socket.on('LOGOUT_ALL', (data) => {
                 console.warn("Global Logout Signal Received!", data);
-                if (data.user_id === userId) {
-                    let msg = `Security Alert from Protocol Sentinel:\n\nGlobal Logout Initiated by ${data.initiator || 'System'}.\nReason: ${data.reason}`;
-                    alert(msg);
-                    sessionStorage.clear();
-                    navigate('/login');
+                console.log("Expected UserID:", userId, "Received UserID:", data.user_id);
+                if (String(data.user_id) === String(userId)) {
+                    let msg = `Global Logout Initiated by ${data.initiator || 'System'}.\nReason: ${data.reason}`;
                     socket.disconnect();
+                    // Use callback to update App state and navigate
+                    if (onLogout) onLogout(msg);
                 }
             });
 
             // Re-Auth Handlers
             socket.on('REQUIRE_REAUTH', (data) => {
                 console.warn("🛡️ Security Challenge Received");
-                // In a real app, this would open a Modal.
-                // For prototype, we use prompt().
                 const pwd = prompt(`⚠️ SECURITY CHALLENGE ⚠️\n\nSystem detected unusual activity: ${data.reason}\n\nPlease verify your password to continue:`);
                 if (pwd) {
                     socket.emit('verify_password', { user_id: userId, password: pwd });
@@ -76,6 +77,7 @@ const useSocketListener = (navigate, token) => {
             return () => {
                 clearInterval(heartbeatInterval);
                 socket.off('connect', onConnect);
+                socket.off('connect_error');
                 socket.off('LOGOUT_ALL');
                 socket.off('REQUIRE_REAUTH');
                 socket.off('REAUTH_SUCCESS');
@@ -86,7 +88,7 @@ const useSocketListener = (navigate, token) => {
                 socket.disconnect();
             }
         }
-    }, [navigate, token]);
+    }, [navigate, token, onLogout]);
 };
 
 export { socket };

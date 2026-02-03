@@ -25,15 +25,15 @@ function AppContent() {
     // Session Storage Sync - Only for current tab focus/reload
     // We removed cross-tab localStorage sync to ensure "every time" login requirement
 
-    const handleLocalLogout = useCallback(() => {
+    const handleLocalLogout = useCallback((reason = null) => {
         sessionStorage.clear();
         setToken(null);
-        setStatus("Logged out");
-        navigate('/login');
+        setStatus(reason || "Logged out");
+        navigate('/login', { state: { globalLogoutMessage: reason } });
     }, [navigate]);
 
     useAuthInterceptor(navigate);
-    useSocketListener(navigate, token);
+    useSocketListener(navigate, token, handleLocalLogout);
 
     const [socketId, setSocketId] = useState(socket.id);
 

@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import ShieldLogo from '../components/ShieldLogo';
 
 const LoginPage = ({ onLogin, status }) => {
+    const location = useLocation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    // Prioritize message passed via redirect, else default status
+    const [localStatus, setLocalStatus] = useState(location.state?.globalLogoutMessage || status || '');
 
+    // Reset status on new login attempt
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLocalStatus('');
         onLogin(username, password);
     };
 
@@ -153,14 +159,14 @@ const LoginPage = ({ onLogin, status }) => {
                     </motion.div>
                 </form>
 
-                {status && (
+                {localStatus && (
                     <motion.p
-                        className={`status-badge ${status.includes('Failed') ? 'status-error' : 'status-success'}`}
+                        className={`status-badge ${localStatus.includes('Failed') ? 'status-error' : 'status-success'}`}
                         style={{ marginTop: '1.5rem', textAlign: 'center' }}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                     >
-                        {status}
+                        {localStatus}
                     </motion.p>
                 )}
             </motion.div>

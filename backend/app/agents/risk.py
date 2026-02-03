@@ -16,13 +16,12 @@ class RiskDetectionAgent:
         total_score = 0
         reasons = []
 
-        # 1. Base Risks (New Device, Location)
-        # In a real app, successful previous logins would be stored for comparison.
-        # For prototype, we mock "New Country" if 'country' is not 'US'.
-        country = current_meta.get('country', 'US')
-        if country != 'US':
-             total_score += 50
-             reasons.append(f"New Country Detected: {country} (+50)")
+        # 1. Geo-Fencing Rule (India Only)
+        # Strict Policy: If not India, immediate BLOCK.
+        country = current_meta.get('country', 'India')
+        if country != 'India':
+             total_score += 100
+             reasons.append(f"Foreign Access Detected: {country} (Strict Policy: India Only)")
 
         # 2. High Concurrency (>3 Sessions)
         active_sessions = self.monitor.get_active_sessions(user_id)
