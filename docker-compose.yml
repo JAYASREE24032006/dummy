@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+    image: agentic-backend
+    container_name: agentic-backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=YOUR_SECRET_KEY
+    depends_on:
+      - redis
+
+  frontend:
+    build: 
+      context: ./frontend
+    image: agentic-frontend
+    container_name: agentic-frontend
+    command: npm run dev -- --host
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:alpine
+    container_name: agentic-redis
+    ports:
+      - "6379:6379"

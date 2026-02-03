@@ -1,0 +1,214 @@
+:root {
+  /* Premium SaaS Palette */
+  --bg-deep: #020617;
+  /* Richer Black/Blue */
+  --bg-surface: #0f172a;
+  /* Slate 900 */
+  --primary: #3b82f6;
+  /* Royal Blue */
+  --primary-glow: rgba(59, 130, 246, 0.5);
+  --accent: #8b5cf6;
+  /* Violet */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+
+  /* Functional Colors */
+  --error: #ef4444;
+  --success: #10b981;
+
+  /* Refined Borders & Glass */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Modern Typography - Inter + JetBrains Mono */
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Global Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #020617 !important;
+  /* Force Dark Background */
+  color: #ffffff !important;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #020617;
+  /* Deep Space Black */
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Galaxy Nebula Glow */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.25), transparent 50%),
+    /* Violet Nebula */
+    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.25), transparent 50%);
+  /* Blue Nebula */
+  filter: blur(80px);
+  z-index: -2;
+  animation: nebula-pulse 15s ease-in-out infinite alternate;
+}
+
+/* Moving Starfield */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 2.5px),
+    radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 1.5px);
+  background-size: 550px 550px, 350px 350px;
+  background-position: 0 0, 40px 60px;
+  z-index: -1;
+  opacity: 0.6;
+  animation: stars-drift 100s linear infinite;
+}
+
+@keyframes nebula-pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes stars-drift {
+  from {
+    background-position: 0 0, 40px 60px;
+  }
+
+  to {
+    background-position: 550px 550px, 390px 410px;
+  }
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  color: var(--text-main);
+}
+
+h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  background: linear-gradient(to right, var(--text-main), #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p {
+  margin-bottom: 1em;
+  color: var(--text-muted);
+}
+
+code,
+pre,
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Forms & Inputs Global Styles */
+input,
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  width: 100%;
+  transition: all 0.2s ease;
+  display: block;
+  /* Ensure they don't collapse inline */
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  /* Subtle ring */
+}
+
+/* Fix for Dropdown Options being invisible */
+option {
+  background-color: var(--bg-surface) !important;
+  color: white !important;
+  padding: 10px;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Buttons Global Styles */
+button {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  /* Headings font for buttons looks better */
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  /* Updated to tight premium look */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dedicated Typography Classes */
+.system-status,
+.identity-id {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Ensure specific headers conform */
+h1,
+h2 {
+  letter-spacing: -0.02em;
+}
