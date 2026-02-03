@@ -51,21 +51,35 @@ function AppContent() {
     }, []);
 
     const handleLogin = async (username, password) => {
+        console.log("Attempting Login:", username);
         try {
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
+            // Use URLSearchParams for application/x-www-form-urlencoded
+            const params = new URLSearchParams();
+            params.append('username', username);
+            params.append('password', password);
 
-            // Pass Password and Username
-            const res = await api.post('/auth/login', formData);
+            const res = await api.post('/auth/login', params, {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+
+            console.log("Login Success:", res.data);
             sessionStorage.setItem('token', res.data.access_token);
-            sessionStorage.setItem('user_id', 'user_123'); // From token in real app
+            sessionStorage.setItem('user_id', 'user_123');
+
+            // Force state update and navigate
             setToken(res.data.access_token);
-            setStatus("Login Successful - Session Active");
-            navigate('/dashboard');
+            setStatus("Login Successful - Redirecting...");
+
+            // Short delay to ensure state propagates, though not strictly necessary
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 100);
+
         } catch (err) {
-            console.error(err);
-            setStatus("Login Failed: " + (err.response?.data?.detail || err.message));
+            console.error("Login Error:", err);
+            const errorMsg = err.response?.data?.detail || "Connection Error";
+            setStatus("Login Failed: " + errorMsg);
+            alert("Login Failed: " + errorMsg); // Explicitly notify user
         }
     };
 
