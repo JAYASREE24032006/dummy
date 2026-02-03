@@ -132,7 +132,7 @@ function AppContent() {
                 <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
             </Routes>
             <footer className="app-footer-text">
-                Product from Clowns in Clouds
+                Agentic AI-Driven SSO
             </footer>
         </div >
     );

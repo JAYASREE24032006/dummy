@@ -155,7 +155,7 @@ const LoginPage = ({ onLogin, status }) => {
                         variants={itemVariants}
                         transition={{ delay: 0.7 }}
                     >
-                        Product from Clowns in Clouds
+                        Agentic AI-Driven SSO
                     </motion.div>
                 </form>
 

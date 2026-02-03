@@ -124,12 +124,12 @@
 
 /* App Themes (Accents) */
 .hr-theme {
-  border-top: 4px solid #d946ef;
+  border-top: 4px solid #eab308;
 }
 
 .hr-theme:hover {
-  box-shadow: 0 0 20px rgba(217, 70, 239, 0.2);
-  border-color: #d946ef;
+  box-shadow: 0 0 20px rgba(234, 180, 8, 0.2);
+  border-color: #eab308;
 }
 
 .hr-theme h3 {
