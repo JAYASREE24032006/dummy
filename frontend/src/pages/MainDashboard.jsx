@@ -16,7 +16,7 @@ const MainDashboard = ({ status, handleLogout, handleGlobalLogout }) => {
             <p className="welcome-text">Connected to Enterprise SSO Hub</p>
 
             <div className="simulation-controls" style={{ margin: '20px 0', padding: '15px', border: '1px dashed #666', borderRadius: '8px' }}>
-                <label style={{ marginRight: '10px' }}>⚡ Simulation Mode - Identity:</label>
+                <label style={{ marginRight: '10px' }}> Simulation Mode - Identity:</label>
                 <select value={currentApp} onChange={handleAppSwitch} style={{ padding: '5px' }}>
                     <option value="Portal Dashboard">Portal Dashboard</option>
                     <option value="HR Portal">HR Portal</option>
